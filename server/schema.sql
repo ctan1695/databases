@@ -8,20 +8,13 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(900)
 );
 
-CREATE TABLE IF NOT EXISTS rooms (
-  id INT,
-  PRIMARY KEY(id),
-  name VARCHAR(900)
-);
-
 CREATE TABLE IF NOT EXISTS messages (
   id INT,
   PRIMARY KEY(id),
   message_text VARCHAR(900),
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES users(id),
-  room_id INT,
-  FOREIGN KEY (room_id) REFERENCES rooms(id)
+  room_name VARCHAR(900)
 );
 
 CREATE TABLE IF NOT EXISTS friends (
