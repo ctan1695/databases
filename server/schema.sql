@@ -2,14 +2,18 @@ CREATE DATABASE IF NOT EXISTS chat;
 
 USE chat;
 
+DROP TABLE friends;
+DROP TABLE messages;
+DROP TABLE users;
+
 CREATE TABLE IF NOT EXISTS users (
-  id INT,
+  id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   name VARCHAR(900)
 );
 
 CREATE TABLE IF NOT EXISTS messages (
-  id INT,
+  id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   message_text VARCHAR(900),
   user_id INT,
@@ -18,7 +22,7 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 CREATE TABLE IF NOT EXISTS friends (
-  id INT,
+  id INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(id),
   friend_one INT,
   FOREIGN KEY (friend_one) REFERENCES users(id),
