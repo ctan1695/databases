@@ -18,17 +18,29 @@ var App = {
 
     // Poll for new messages every 3 sec
     setInterval(App.fetch, 3000);
-      },
+  },
 
   fetch: function(callback = ()=>{}) {
     Parse.readAll((data) => {
+      const parsedData = JSON.parse(data);
+      var shapedData = [];
 
+      for (var i = 0; i < parsedData.length; i++) {
+        var dataSet = {
+          text: parsedData[i].message_text,
+          username: parsedData[i].username,
+          roomname: parsedData[i].room_name
+        };
+        shapedData.push(dataSet);
+      }
+
+      console.log(shapedData);
       // Don't bother to update if we have no messages
-      if (!data.results || !data.results.length) { return; }
+      if (!shapedData || !shapedData.length) { return; }
 
-      Rooms.update(data.results, RoomsView.render);
-      Messages.update(data.results, MessagesView.render);
-      
+      Rooms.update(shapedData, RoomsView.render);
+      Messages.update(shapedData, MessagesView.render);
+
       callback();
     });
   },

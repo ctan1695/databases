@@ -21,15 +21,15 @@ CREATE TABLE IF NOT EXISTS messages (
   room_name VARCHAR(900)
 );
 
-CREATE TABLE IF NOT EXISTS friends (
-  id INT NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY(id),
-  friend_one INT,
-  FOREIGN KEY (friend_one) REFERENCES users(id),
-  friend_two INT,
-  FOREIGN KEY (friend_two) REFERENCES users(id),
-  status_flag BIT
-);
+-- CREATE TABLE IF NOT EXISTS friends (
+--   id INT NOT NULL AUTO_INCREMENT,
+--   PRIMARY KEY(id),
+--   friend_one INT,
+--   FOREIGN KEY (friend_one) REFERENCES users(id),
+--   friend_two INT,
+--   FOREIGN KEY (friend_two) REFERENCES users(id),
+--   status_flag BIT
+-- );
 
 /*  Execute this file from the command line by typing:
  *    mysql -u root < server/schema.sql
