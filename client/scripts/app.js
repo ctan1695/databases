@@ -36,7 +36,10 @@ var App = {
 
       console.log(shapedData);
       // Don't bother to update if we have no messages
-      if (!shapedData || !shapedData.length) { return; }
+      if (!shapedData || !shapedData.length) {
+        callback();
+        return;
+      }
 
       Rooms.update(shapedData, RoomsView.render);
       Messages.update(shapedData, MessagesView.render);

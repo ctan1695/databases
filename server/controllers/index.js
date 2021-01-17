@@ -15,35 +15,48 @@ module.exports = {
     }, // a function which handles a get request for all messages
     post: function (req, res) {
       const errUserNotFound = 'not found';
-      // console.log('req.body.username: ', req.body.username);
-      models.users.get(req.body.username)
-        .then(userID => {
-          // console.log('userID: ', userID);
-          // console.log('text: ', req.body);
-          return models.messages.post(req.body.text, userID, req.body.roomname);
+
+      const {
+        roomname,
+        text,
+        username
+      } = req.body;
+
+      models.users.get(username)
+        .then(user => {
+          if (!user) {
+            throw new Error(`failed to fetch ${username}`);
+          }
+
+          const userID = user.id;
+
+          return models.messages.post(text, userID, roomname);
         })
         .then(() => {
+          res.writeHead(200);
           res.end();
         })
         .catch(err => {
-          // console.log(err);
-          // err === no user found
           if (err.message === errUserNotFound) {
             // create the user
-            console.log('user not found');
-            // console.log('post req: ', req);
-            models.users.post(req.body.username)
+            console.log(`${username} not found. creating user...`);
+            models.users.post(username)
               .then(() => {
                 // call `.post` again
+                console.log(`created user: ${username}`);
                 return module.exports.messages.post(req, res);
               })
               .catch(err => {
-                console.log(err);
+                console.log(`failed to create user (${username}): ${err.message}`);
                 res.end(err);
               });
-          }
+          } else {
+            res.writeHead(500, {
+              'Content-Type': 'text/plain'
+            });
 
-          res.end();
+            res.end(err.message);
+          }
         });
     } // a function which handles posting a message to the database
   },
