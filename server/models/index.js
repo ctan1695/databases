@@ -34,6 +34,7 @@ module.exports = {
     // Ditto as above.
     get: function (username) {
       if (username) {
+        console.log(`fetching "${username}"`);
         return db.models.users.findAll({
           where: {
             name: username
@@ -46,33 +47,10 @@ module.exports = {
           }
         });
       } else {
+        console.log('fetching all users');
         return db.models.users.findAll();
       }
 
-      // return new Promise((resolve, reject) => {
-      //   var queryString;
-      //   var queryArgs;
-
-      //   if (username) {
-      //     queryString = `SELECT id, name FROM users WHERE name = ?`; // change query
-      //     queryArgs = [username];
-      //   } else {
-      //     queryString = `SELECT id, name FROM users`; // change query
-      //     queryArgs = [];
-      //   }
-
-      //   db.query(queryString, queryArgs, function(err, results) {
-      //     if (err) {
-      //       reject(err);
-      //     } else {
-      //       if (results.length > 0) {
-      //         resolve(username ? results[0].id : results);
-      //       } else {
-      //         reject(new Error('not found'));
-      //       }
-      //     }
-      //   });
-      // });
     },
     post: function (username) {
       if (!username) {
@@ -84,21 +62,6 @@ module.exports = {
           name: username,
         });
       }
-
-
-      // return new Promise((resolve, reject) => {
-      //   var queryString = `INSERT INTO users (name) VALUES (?)`; // change query
-      //   var queryArgs = [username];
-
-      //   db.query(queryString, queryArgs, function(err, results) {
-      //     if (err) {
-      //       reject(err);
-      //     } else {
-      //       console.log('results: ', results);
-      //       resolve(results);
-      //     }
-      //   });
-      // });
     }
   }
 };

@@ -1,4 +1,4 @@
-const { response } = require('express');
+const url = require('url');
 var models = require('../models');
 
 module.exports = {
@@ -65,7 +65,24 @@ module.exports = {
     // Ditto as above
     get: function (req, res) {
       // get username from body
-      const username = req.body.username;
+      let username = req.body.username;
+
+      if (!username) {
+        // or from uri
+        const parsedURL = url.parse(req.url);
+        // we're looking for a username like '?name=justin1' within the url
+        const queries = parsedURL.query ? parsedURL.query.split('&') : [];
+        let query = null;
+
+        for (let i = 0; i < queries.length; i++) {
+          query = queries[i];
+          if (query.indexOf('name=') > -1) {
+            query = query.split('=');
+            username = query.length > 1 ? query[1] : null;
+            break;
+          }
+        }
+      }
 
       // return users
       models.users.get(username)
@@ -73,14 +90,17 @@ module.exports = {
           res.end(JSON.stringify(users));
         })
         .catch(err => {
-          console.log(err);
-          res.end();
+          if (err.message === 'not found') {
+            res.writeHead(404);
+            res.end('not found');
+          } else {
+            res.writeHead(500);
+            res.end('internal server error');
+          }
         });
 
     },
     post: function (req, res) {
-      console.log(req.body.username);
-
       models.users.post(req.body.username)
         .then(() => {
           res.end();

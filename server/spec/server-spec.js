@@ -127,21 +127,24 @@ describe('Persistent Node Chat Server', function() {
           where: {
             name: username
           }
-        }).then((result) => {
-          if (result.length < 1) {
+        }).then((results) => {
+          if (results.length < 1) {
             throw new Error('not found');
           } else {
+            console.log('results length', results.length);
             expect(results.length).to.equal(1);
-            expect(results[0]).to.equal(username);
+            expect(results[0].dataValues.name).to.equal(username);
             done();
           }
         }).catch(err => {
           console.log(`fetch single user error: ${err}`);
+          expect(err).to.be.null;
           done();
         });
       });
     }).catch(err => {
       console.log(`create user error: ${err}`);
+      expect(err).to.be.null;
 
       done();
     });
