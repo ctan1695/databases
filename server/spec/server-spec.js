@@ -1,21 +1,18 @@
 /* You'll need to have MySQL running and your Node server running
  * for these tests to pass. */
 
-var mysql = require('mysql');
+var dbConnection = require('../server/db/index');
 var request = require('request'); // You might need to npm install the request module!
 var expect = require('chai').expect;
 
 describe('Persistent Node Chat Server', function() {
-  var dbConnection;
+  // var dbConnection;
 
 
   beforeEach(function(done) {
-    dbConnection = mysql.createConnection({
-      user: 'root',
-      password: '',
-      database: 'chat'
-    });
-    dbConnection.connect();
+    // dbConnection = new Sequelize('chat', 'root', '', {
+    //   dialect: 'mysql'
+    // });
 
     var tablename = 'messages'; // TODO: fill this out
 

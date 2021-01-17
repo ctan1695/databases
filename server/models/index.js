@@ -1,35 +1,46 @@
 var db = require('../db');
+var sequelize = require('sequelize');
 
 module.exports = {
   messages: {
     get: function () {
-      return new Promise((resolve, reject) => {
-        var queryString = 'select *, (select name from `users` where id = m.user_id) username from `messages` m;';
-        var queryArgs = [];
-
-        db.query(queryString, queryArgs, function(err, results) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(results);
-          }
-        });
+      return db.models.Message.findAll({
+        attribute: {
+          include: [
+            [
+              sequelize.literal(`(
+                select name
+                from users
+                where id = m.user_id
+              )`),
+              'username'
+            ]
+          ]
+        }
       });
     }, // a function which produces all the messages
     post: function (text, userID, roomName) {
-      return new Promise((resolve, reject) => {
-        var queryString = `INSERT INTO messages (message_text, user_id, room_name) VALUES (?, ?, ?)`;
-        var queryArgs = [text, userID, roomName];
-
-        db.query(queryString, queryArgs, function(err, results) {
-          if (err) {
-            reject(err);
-          } else {
-            console.log('messages results: ', results);
-            resolve(results);
-          }
-        });
+      // we have to wrap these keys in quotes
+      // because of pomander enforcing camelCase rules
+      return db.models.Message.create({
+        'message_text': text,
+        'user_id': userID,
+        'room_name': roomName
       });
+      // //break
+      // return new Promise((resolve, reject) => {
+      //   var queryString = `INSERT INTO messages (message_text, user_id, room_name) VALUES (?, ?, ?)`;
+      //   var queryArgs = [text, userID, roomName];
+
+      //   db.query(queryString, queryArgs, function(err, results) {
+      //     if (err) {
+      //       reject(err);
+      //     } else {
+      //       console.log('messages results: ', results);
+      //       resolve(results);
+      //     }
+      //   });
+      // });
     } // a function which can be used to insert a message into the database
   },
 
